@@ -145,7 +145,7 @@ build-pb: go-tidy
 	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative internal/api/v1/*.proto
 test:
 	@echo "$(ECHO_BEFORE2)Executing tests$(ECHO_AFTER)"
-	go test ./... -v
+	CDS_CONFIG_PATH=$(CDS_CONFIG_PATH) go test ./... -v
 
 gen-coverage:
 	@echo "$(ECHO_BEFORE2)Executing coverage$(ECHO_AFTER)"
