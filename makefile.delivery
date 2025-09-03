@@ -20,9 +20,7 @@ PLATFORMS = \
 	darwin/amd64 \
 	darwin/arm64 \
 	windows/amd64 \
-	windows/386 \
-	freebsd/amd64 \
-	freebsd/arm64
+	windows/386
 
 # Delivery target - builds all binaries for all platforms
 .PHONY: delivery
