@@ -1,0 +1,125 @@
+name: Bug report
+description: Report a reproducible bug in CDS
+title: "bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+
+        Please **do not** include secrets (tokens, passwords, private keys, certificates).
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected component
+      options:
+        - CLI (cds)
+        - API Agent
+        - TLS / certificates
+        - SCM (Git/Bitbucket)
+        - Artifactory
+        - Other / unsure
+    validations:
+      required: true
+
+  - type: input
+    id: cds_version
+    attributes:
+      label: CDS version
+      description: Paste the output of `cds version`.
+      placeholder: |
+        cds version
+        ...
+    validations:
+      required: true
+
+  - type: input
+    id: go_version
+    attributes:
+      label: Go version
+      description: Paste the output of `go version`.
+      placeholder: go version go1.24.x darwin/arm64
+    validations:
+      required: true
+
+  - type: input
+    id: os_arch
+    attributes:
+      label: OS and architecture
+      description: E.g. macOS 14.x (arm64), Ubuntu 22.04 (amd64), Windows 11.
+      placeholder: macOS 14.x (arm64)
+    validations:
+      required: true
+
+  - type: input
+    id: command
+    attributes:
+      label: Command(s) executed
+      description: Include the exact command(s) and flags you ran.
+      placeholder: cds project init --foo bar
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened? Include the full error message.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Provide minimal steps so we can reproduce the issue.
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / debug output
+      description: Paste relevant logs here. Please redact secrets.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuration (sanitized)
+      description: |
+        If relevant, include **sanitized** config snippets and how CDS found them.
+
+        Helpful details:
+        - `CDS_CONFIG_PATH` value (if set)
+        - Config directory actually used
+        - Sanitized snippets of `cliconfig.yaml` / `aconfig.yaml`
+      render: yaml
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues to avoid duplicates.
+          required: true
+        - label: I have removed or redacted any sensitive information.
+          required: true

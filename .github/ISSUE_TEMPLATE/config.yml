@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions / Support
+    url: https://github.com/AmadeusITGroup/CDS/discussions
+    about: Please use Discussions for questions and troubleshooting help.
+  - name: Security Policy
+    url: https://github.com/AmadeusITGroup/CDS/security/policy
+    about: Please report security vulnerabilities privately (see SECURITY.md).
