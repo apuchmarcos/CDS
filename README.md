@@ -1,75 +1,366 @@
 # Containers Development Space (CDS)
 
-## Overview
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Go Version](https://img.shields.io/badge/Go-1.24%2B-00ADD8?logo=go)](go.mod)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-The Containers Development Space (CDS) is a framework designed to build and manage development environment containers, also known as devcontainers. It provides a structured way to organize, build, and run applications within isolated container environments, ensuring consistent behavior across different machines and platforms.
+> A powerful framework for building and managing development environment containers with consistent, reproducible workflows across teams and platforms.
 
-The CDS framework uses a Go-based structure, with application-specific code located in the `cmd/` directory. Each subdirectory under cmd/ represents a separate application, such as the API agent application and the client application. More details about the directory structure can be found in the [Directory Structure](#directory-structure) section.
+---
 
-## Directory Structure
+## 📋 Table of Contents
 
-- `.gitignore`: This file is used to exclude certain files from the repository.
-- `go.mod`: This is the Go module file. It defines the module’s module path, which is also the import path used for the root directory, and its dependency requirements.
-- `go.sum`: This file includes cryptographic checksums of the content of specific module versions.
-- `cmd/`: This directory contains application-specific code. Each subdirectory here represents a separate application .
-  - `api-agent/`: This directory contains the code for the API agent application.
+- [Overview](#-overview)
+- [Features](#-features)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+- [Quick Start](#-quick-start)
+- [Usage](#-usage)
+- [Project Structure](#-project-structure)
+- [Development](#-development)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Acknowledgments](#-acknowledgments)
 
-  - `client/`: This directory contains the code for the client application.
-    - `cds.go`: This is the main file for the client application.
-- `internal/`: This directory is for code that is not meant to be used by other applications or libraries in the project.
-  - `agent/`: This directory contains code related to the agent functionality.
-    - `agent.go`: This is the main file for the agent functionality.
+---
 
-## Building and Running
+## 🎯 Overview
 
-To build and run an application, navigate to its directory under `cmd/` and run `go build` to build the application and `go run` to run it. Alternatively, you can use the `make` command by running `make <appropriate build target>` to build the application and `make <appropriate run target>` to run it, using the [makefile](./makefile) file.
+**Containers Development Space (CDS)** is a Go-based framework designed to streamline the creation, management, and orchestration of development environment containers (devcontainers). CDS provides a structured approach to building consistent development environments that work seamlessly across different machines, operating systems, and team configurations.
 
-For example, to run the API agent application, navigate to `make run-api-agent`.
+### Why CDS?
 
-### Dependencies
+- **Consistency**: Ensure all developers work in identical environments
+- **Portability**: Development environments that work on Linux, macOS, and Windows
+- **Security**: Built-in TLS/SSL support with certificate management
+- **Integration**: Native support for Git, Artifactory, and Bitbucket
+- **Extensibility**: Modular architecture with gRPC-based APIs
 
-You will need to have `protoc` installed on your system to generate the gRPC code. You can install it by following the instructions [here](https://grpc.io/docs/protoc-installation/).
+---
 
-### Windows
+## ✨ Features
 
-Note that on windows `make` can only be used with Git Bash or WSL.
+- 🐳 **Container Orchestration**: Build and manage development containers with ease
+- 🔐 **Secure Communication**: Built-in TLS/SSL certificate generation and management
+- 🌐 **gRPC API**: High-performance API for agent-based communication
+- 🔄 **SCM Integration**: Native support for Git, Bitbucket, and other version control systems
+- 📦 **Artifact Management**: Integration with JFrog Artifactory
+- 🖥️ **Cross-Platform**: Support for Linux, macOS, and Windows
+- 🔧 **Systemd Integration**: Native systemd support for Linux environments
+- 📊 **Structured Logging**: Advanced logging with Go's log/slog
+- 🧪 **Testing Framework**: Comprehensive test suite using Ginkgo and Gomega
+- 🎨 **Rich CLI**: Beautiful terminal output with pterm
 
-## Go Linter
+---
 
-To ensure code quality and adherence to coding standards, it is recommended to use a Go linter. A popular Go linter is [golangci-lint](https://golangci-lint.run/).
+## 📦 Prerequisites
 
-To run `golangci-lint`, you can use `make lint` command.
+Before installing CDS, ensure you have the following dependencies:
 
-## Misc
+- **Go**: Version 1.24.0 or higher ([Download](https://golang.org/dl/))
+- **Protocol Buffers Compiler**: protoc for gRPC code generation ([Installation Guide](https://grpc.io/docs/protoc-installation/))
+- **Make**: Build automation tool
+  - Linux/macOS: Usually pre-installed
+  - Windows: Use [Git Bash](https://git-scm.com/downloads) or [WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
+- **OpenSSL**: For TLS certificate operations (usually pre-installed on Linux/macOS)
+
+### Optional Tools
+
+- **golangci-lint**: For code quality checks ([Installation](https://golangci-lint.run/usage/install/))
+
+---
+
+## 🚀 Installation
+
+### From Source
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/AmadeusITGroup/CDS.git
+   cd CDS
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   go mod download
+   ```
+
+3. **Install Protocol Buffer tools**:
+   ```bash
+   go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+   go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+   ```
+
+4. **Build the project**:
+   ```bash
+   make install
+   ```
+
+---
+
+## ⚡ Quick Start
+
+### Running the CDS Client
 
 ```bash
-❯ go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-❯ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-❯ protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative internal/api/v1/*.proto
-
-❯ openssl x509 -in ca_cert.pem -text -noout
-❯ openssl x509 -in server_cert.pem -text -noout
-❯ openssl ec -in server_private_key.pem -text -noout
-
-❯ openssl verify -CAfile ca_cert.pem server_cert.pem
-server_cert.pem: OK
+make run-client
 ```
 
-### TLS
+### Running the API Agent
 
-certs keys algorithms: `https://github.dev/cloudflare/cfssl/blob/master/cli/gencert/gencert.go`
+```bash
+make run-api-agent
+```
 
-### log/slog
+### Generate TLS Certificates
 
-- `https://henesgokdag.medium.com/log-slog-library-and-golang-logger-comparision-9e2c3de3d515`
-- `https://go.dev/blog/slog`
-- `https://github.com/golang/example/blob/master/slog-handler-guide/README.md`
-- `https://go.dev/wiki/Resources-for-slog`
+```bash
+make gencert
+```
 
-### opentelemetry
+### Run Tests
 
-- https://opentelemetry.io/docs/languages/go/getting-started/
-- https://opentelemetry.io/ecosystem/registry/?s=grpc&component=&language=
-- https://github.com/open-telemetry/opentelemetry-go-contrib/blob/main/instrumentation/google.golang.org/grpc/otelgrpc/interceptor.go
-- https://github.com/open-telemetry/opentelemetry-go/tree/main/example
+```bash
+make test
+```
 
+---
+
+## 📖 Usage
+
+### Client Commands
+
+The CDS client provides several commands for managing your development spaces:
+
+```bash
+# Initialize a new project
+cds project init
+
+# Initialize a new space
+cds space init
+
+# Check version
+cds version
+```
+
+### Configuration
+
+CDS configuration is stored in ~/.cds/ directory. You can customize settings through:
+- Configuration files
+- Environment variables
+- Command-line flags
+
+### Working with Projects
+
+```bash
+# Create a new project scaffold
+make scaffold
+```
+
+### Certificate Management
+
+Generate and manage TLS certificates for secure communication:
+
+```bash
+# Verify certificates
+openssl verify -CAfile ca_cert.pem server_cert.pem
+
+# Inspect certificate details
+openssl x509 -in server_cert.pem -text -noout
+```
+
+---
+
+## 🏗️ Project Structure
+
+```
+CDS/
+├── cmd/                    # Application entry points
+│   ├── api-agent/         # API agent service
+│   └── client/            # CDS CLI client
+├── internal/              # Private application code
+│   ├── agent/            # Agent implementation
+│   ├── api/              # gRPC API definitions
+│   ├── ar/               # Artifactory integration
+│   ├── authmgr/          # Authentication management
+│   ├── bo/               # Business objects
+│   ├── bootstrap/        # Application bootstrapping
+│   ├── cenv/             # Environment management
+│   ├── cerr/             # Error handling
+│   ├── clog/             # Logging framework
+│   ├── command/          # CLI commands
+│   ├── config/           # Configuration management
+│   ├── db/               # Database/storage layer
+│   ├── host/             # Host management
+│   ├── profile/          # Profile management
+│   ├── scm/              # Source control management
+│   ├── shexec/           # Shell execution utilities
+│   ├── systemd/          # Systemd integration
+│   ├── term/             # Terminal utilities
+│   └── tls/              # TLS/certificate management
+├── test/                  # Test resources
+├── go.mod                 # Go module definition
+├── makefile               # Build automation
+└── LICENSE                # Apache 2.0 License
+```
+
+### Key Directories
+
+- **cmd/**: Contains the main applications. Each subdirectory is a separate executable.
+- **internal/**: Private packages not intended for external import. Contains the core business logic.
+- **test/**: Test fixtures, resources, and integration tests.
+
+---
+
+## 🛠️ Development
+
+### Building from Source
+
+```bash
+# Build all binaries
+make build
+
+# Build specific components
+make build-client
+make build-api-agent
+```
+
+### Generating Protocol Buffers
+
+When modifying .proto files:
+
+```bash
+make build-pb
+```
+
+Or manually:
+
+```bash
+protoc --go_out=. --go_opt=paths=source_relative \
+       --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+       internal/api/v1/*.proto
+```
+
+### Code Quality
+
+```bash
+# Run linter
+make lint
+
+# Run linter with auto-fix
+make lint-weak
+
+# Run tests
+make test
+
+# Generate coverage report
+make coverage
+```
+
+### Dependency Management
+
+```bash
+# Tidy dependencies
+make go-tidy
+```
+
+### Platform-Specific Notes
+
+#### Windows
+- Use Git Bash or Windows Subsystem for Linux (WSL) to run make commands
+- Ensure paths are properly escaped when working with Windows paths
+
+#### Linux
+- Systemd integration is available for service management
+- Check systemd service files in internal/systemd/
+
+#### macOS
+- Boot configuration available in internal/bootstrap/boot_darwin.go
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions from the community! Here's how you can help:
+
+### Getting Started
+
+1. **Fork the repository**
+2. **Create a feature branch**: git checkout -b feature/amazing-feature
+3. **Make your changes**
+4. **Run tests**: make test
+5. **Run linter**: make lint
+6. **Commit your changes**: git commit -m 'Add amazing feature'
+7. **Push to the branch**: git push origin feature/amazing-feature
+8. **Open a Pull Request**
+
+### Development Guidelines
+
+- Follow Go best practices and idioms
+- Write comprehensive tests for new features
+- Update documentation for API changes
+- Ensure all tests pass before submitting PR
+- Keep commits atomic and well-described
+
+### Code Style
+
+This project uses golangci-lint to enforce code quality. Run the linter before submitting:
+
+```bash
+make lint
+```
+
+### Testing
+
+- Write unit tests for new functionality
+- Update integration tests when changing APIs
+- Aim for high test coverage
+
+### Reporting Issues
+
+Found a bug? Have a feature request? Please open an issue with:
+- Clear description of the problem
+- Steps to reproduce (for bugs)
+- Expected vs actual behavior
+- Environment details (OS, Go version, etc.)
+
+---
+
+## 📄 License
+
+This project is licensed under the **Apache License 2.0** - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+Built with these excellent open-source projects:
+
+- [Go](https://golang.org/) - The Go Programming Language
+- [gRPC](https://grpc.io/) - High-performance RPC framework
+- [Protocol Buffers](https://developers.google.com/protocol-buffers) - Data serialization
+- [Cobra](https://github.com/spf13/cobra) - CLI framework
+- [Viper](https://github.com/spf13/viper) - Configuration management
+- [Ginkgo](https://github.com/onsi/ginkgo) & [Gomega](https://github.com/onsi/gomega) - Testing framework
+- [pterm](https://github.com/pterm/pterm) - Beautiful terminal output
+- [go-git](https://github.com/go-git/go-git) - Git implementation in Go
+
+### References & Resources
+
+- **TLS/Certificate Management**: Inspired by [Cloudflare CFSSL](https://github.com/cloudflare/cfssl)
+- **Logging**: Built with Go's [log/slog](https://go.dev/blog/slog) - [Guide](https://github.com/golang/example/blob/master/slog-handler-guide/README.md)
+- **Observability**: [OpenTelemetry for Go](https://opentelemetry.io/docs/languages/go/getting-started/)
+- **gRPC Instrumentation**: [OpenTelemetry gRPC](https://github.com/open-telemetry/opentelemetry-go-contrib/tree/main/instrumentation/google.golang.org/grpc/otelgrpc)
+
+---
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/AmadeusITGroup/CDS/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/AmadeusITGroup/CDS/discussions)
+
+---
+
+<div align="center">
+Made with ❤️ by the CDS community
+</div>
