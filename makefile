@@ -120,7 +120,7 @@ install-golangci-lint:
 
 run-api-agent: go-tidy
 	@echo "$(ECHO_BEFORE2)Running cds api server$(ECHO_AFTER)"
-	go run ./cmd/api-agent/cds-api-server.go start
+	go run ./cmd/api-agent/cds-api-agent.go start
 
 run-client: go-tidy
 	@echo "$(ECHO_BEFORE2)Running cds CLI$(ECHO_AFTER)"
